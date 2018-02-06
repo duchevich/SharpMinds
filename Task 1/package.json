@@ -1,0 +1,17 @@
+{
+  "name": "task_1",
+  "version": "1.0.0",
+  "description": "task 1 SharpMinds Course",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-preset-es2015": "^6.24.1",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^7.0.1",
+    "gulp-eslint": "^4.0.2"
+  }
+}
