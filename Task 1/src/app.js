@@ -49,3 +49,11 @@ submit.addEventListener('click', function(e){
     bot(message);
     textarea.value = '';
 })
+
+
+var module = (function () {
+    //private
+    return {
+    //public
+    }
+}());
