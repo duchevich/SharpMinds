@@ -12,26 +12,44 @@
 }
 .text-l{
     float:left;padding-right:10px;
+    padding-top: 15px;
+    padding-left: 20px;
 }        
 .text-r{
     float:right;padding-left:10px;
+    padding-top: 15px;
+    padding-right: 20px;
 }
 .avatar{
     display:flex;
     justify-content:center;
     align-items:center;
-    width:25%;
+    width:50px;
+    height: 50px;
     float:left;
-    padding-right:10px;
+    text-align: center;
+    border-radius: 50%;
+    font-weight: 700;
+}
+.msj .avatar{
+    background: rgb(21, 247, 152);
+    color: red;
+}
+.msj-rta .avatar{
+    background: rgb(128, 173, 44);
+    color: blue;
 }
 .macro{
     margin-top:5px;width:85%;border-radius:5px;padding:5px;display:flex;
 }
 .msj-rta{
     float:right;background:whitesmoke;
+    margin-right: 20px;
+    
 }
 .msj{
     float:left;background:white;
+    margin-left: 20px;    
 }
 .frame{
     background:#e0e0de;

@@ -7,8 +7,6 @@ function init(){
     submit.setAttribute('value', 'Send');
     submit.setAttribute('id', 'submit');
     
-    
-    
     var form = document.createElement('form');
     form.setAttribute('id', 'form');
     form.appendChild(textarea);
