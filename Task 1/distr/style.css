@@ -33,7 +33,7 @@
 }
 .msj .avatar{
     background: rgb(21, 247, 152);
-    color: red;
+    color:  blue;
 }
 .msj-rta .avatar{
     background: rgb(128, 173, 44);
@@ -54,8 +54,10 @@
 .frame{
     background:#e0e0de;
     height:450px;
-    overflow:hidden;
-    padding:0;
+    overflow: scroll;
+    padding: 0;
+    padding-bottom: 100px;
+    position: relative;
 }
 .frame > div:last-of-type{
     position:absolute;bottom:5px;width:100%;display:flex;
@@ -107,3 +109,12 @@ input:focus{
 :-moz-placeholder { /* Firefox 18- */
     color: #d4d4d4;
 }   
+#input-field{
+    position: absolute;
+    bottom: 10px;
+    left: 20px;
+}
+#screen{
+    overflow-y: scroll;
+    height: 100%;
+}
