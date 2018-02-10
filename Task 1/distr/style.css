@@ -54,7 +54,6 @@
 .frame{
     background:#e0e0de;
     height:450px;
-    overflow: scroll;
     padding: 0;
     padding-bottom: 100px;
     position: relative;
