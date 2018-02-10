@@ -1,22 +1,36 @@
 .mytext{
-    border:0;padding:10px;background:whitesmoke;
+    border:0;
+    padding:10px;
+    background:whitesmoke;
 }
 .text{
-    width:75%;display:flex;flex-direction:column;
+    width:75%;
+    display:flex;
+    flex-direction:column;
 }
 .text > p:first-of-type{
-    width:100%;margin-top:0;margin-bottom:auto;line-height: 13px;font-size: 12px;
+    width:100%;
+    margin-top:0;
+    margin-bottom:auto;
+    line-height: 13px;
+    font-size: 12px;
 }
 .text > p:last-of-type{
-    width:100%;text-align:right;color:silver;margin-bottom:-7px;margin-top:auto;
+    width:100%;
+    text-align:right;
+    color:silver;
+    margin-bottom:-7px;
+    margin-top:auto;
 }
 .text-l{
-    float:left;padding-right:10px;
+    float:left;
+    padding-right:10px;
     padding-top: 15px;
     padding-left: 20px;
 }        
 .text-r{
-    float:right;padding-left:10px;
+    float:right;
+    padding-left:10px;
     padding-top: 15px;
     padding-right: 20px;
 }
@@ -40,15 +54,21 @@
     color: blue;
 }
 .macro{
-    margin-top:5px;width:85%;border-radius:5px;padding:5px;display:flex;
+    margin-top:5px;
+    width:85%;
+    border-radius:5px;
+    padding:5px;
+    display:flex;
 }
 .msj-rta{
-    float:right;background:whitesmoke;
+    float:right;
+    background:#f5f5f5;
     margin-right: 20px;
-    
+    position: relative;
 }
 .msj{
-    float:left;background:white;
+    float:left;
+    background:white;
     margin-left: 20px;    
 }
 .frame{
@@ -59,7 +79,10 @@
     position: relative;
 }
 .frame > div:last-of-type{
-    position:absolute;bottom:5px;width:100%;display:flex;
+    position:absolute;
+    bottom:5px;
+    width:100%;
+    display:flex;
 }
 ul {
     width:100%;
@@ -82,16 +105,16 @@ ul {
     border-width: 0 13px 13px 0;
     border-color: transparent #ffffff transparent transparent;            
 }
-.msj-rta:after{
+.msj-rta-right:after{
     width: 0;
     height: 0;
-    content:"";
-    top:-5px;
-    left:14px;
-    position:relative;
+    content: "";
+    top: 0px;
+    right: -10px;
+    position: absolute;
     border-style: solid;
     border-width: 13px 13px 0 0;
-    border-color: whitesmoke transparent transparent transparent;           
+    border-color: whitesmoke transparent transparent transparent;       
 }  
 input:focus{
     outline: none;
