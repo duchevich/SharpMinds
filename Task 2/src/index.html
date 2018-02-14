@@ -1,19 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
-    <link rel="stylesheet" href="/css/bootstrap.css">
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
 <div class="container">
     <h1>Комментарии</h1>
-
-
+    <div class="form-group col-md-3">
+        <select class="form-control form-control-lg" name="filter" id="filter">
+            <option value="0" selected>Сортировка</option>
+            <option value="a">A->Z</option>
+            <option value="z">Z->A</option>
+        </select>
+    </div>
     <table class="table table-striped">
         <thead>
           <tr>
@@ -35,8 +40,8 @@
 </div>
 
 
-    <script src="/js/jquery.min.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
-    <script src="/js/js.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/js.js"></script>
 </body>
 </html>

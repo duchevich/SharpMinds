@@ -2,25 +2,30 @@
 
 let dataKey = 'data',
     data = '',
-    checkAll = document.getElementById('checkall');
+    visibleData = [],
+    alphabetOrder = true;
 
-
+// get data from server, create table and pagination, and put data to localStorage
 let getDataFromServer = function(){
     fetch('https://jsonplaceholder.typicode.com/posts')
         .then(response => response.json())
         .then(json => {
             data = json;
-            createTable();
+            createTable(data);
             localStorage.setItem(dataKey, JSON.stringify(json))}
         );
 }
 
+// checks the availability of data
 let isDataLocal = function(){
-    data = !localStorage.getItem(dataKey) ? getDataFromServer() : JSON.parse(localStorage.getItem(dataKey));
+    data = !localStorage.getItem(dataKey) ? getDataFromServer() : createTable(JSON.parse(localStorage.getItem(dataKey)));
 }
 
+// create pagination
 let createPagination = function(){
     let len = data.length / 10;
+    // console.log(data);
+    // console.log(len);
     let activeItem;
     let pagination = `<li class="page-item"><a class="page-link" href="#">Previous</a></li>`;
     for(let i = 0; i < len; i++){
@@ -33,11 +38,14 @@ let createPagination = function(){
     paginationList.innerHTML = pagination; 
 }
 
-let createTable = function(){
+// create table and pagination
+let createTable = function(data = this.data){
     let tbody = document.getElementById('tbody');
     let contentTable = '';
+    visibleData = [];
     data.forEach(function(item, i, data){
         if(i < 10){
+            visibleData.push(item);
             contentTable += `<tr>
                                 <td><input class="checkboxes" type="checkbox" name="check" value="${item.id}"></td>
                                 <td>${item.id}</td>
@@ -49,8 +57,11 @@ let createTable = function(){
     });
     tbody.innerHTML = contentTable;
     createPagination();
+    //console.log(visibleData);
+    return visibleData;
 }
 
+// select/unselect all checkboxes
 let checkAllBoxes = function(){
     checkBoxes = document.querySelectorAll('.checkboxes');
     if (checkall.checked) {
@@ -65,14 +76,44 @@ let checkAllBoxes = function(){
     }
 }
 
+let alphabetOrderSort = function(alphabetOrder){
+
+    var byName = visibleData.slice(0);
+    byName.sort(function(a,b) {
+        var x = a.title.toLowerCase();
+        var y = b.title.toLowerCase();
+        if(alphabetOrder){
+            return x < y ? -1 : x > y ? 1 : 0;
+        }
+        else{
+            return x > y ? -1 : x < y ? 1 : 0;
+        }
+        
+    });
+    console.log(visibleData);
+    console.log(byName);
+    createTable(byName);
+}
+
+
 
 checkall.addEventListener('click', function(){
     checkAllBoxes();
 })
 
+filter.addEventListener('change', function(){
+    let checked = this.value;
+    ///console.log(checked);
+    if(checked == 'a'){
+        alphabetOrderSort(true);
+    }
+    if(checked == 'z'){
+        alphabetOrderSort(false);
+    }
+})
 
 
 isDataLocal();
-createTable();
+
 }());
 
