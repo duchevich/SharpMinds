@@ -2,7 +2,6 @@
 
 let dataKey = 'data',
     data = '',
-    //visibleData = [],
     alphabetOrder = true;
 
 // get data from server, create table and pagination, and put data to localStorage
@@ -18,11 +17,12 @@ let getDataFromServer = function(){
 
 // checks the availability of data
 let isDataLocal = function(){
-    data = !localStorage.getItem(dataKey) ? getDataFromServer() : createTable(JSON.parse(localStorage.getItem(dataKey)));
+    return data = !localStorage.getItem(dataKey) ? getDataFromServer() : createTable(JSON.parse(localStorage.getItem(dataKey)));
+    
 }
 
 // create pagination
-let createPagination = function(){
+let createPagination = function(data){
     let len = data.length / 10;
     let activeItem;
     let pagination = `<li class="page-item"><a class="page-link" href="#">Previous</a></li>`;
@@ -37,13 +37,11 @@ let createPagination = function(){
 }
 
 // create table and pagination
-let createTable = function(data = this.data){
+let createTable = function(data){
     let tbody = document.getElementById('tbody');
     let contentTable = '';
-    //visibleData = [];
     data.forEach(function(item, i, data){
         if(i < 10){
-            //visibleData.push(item);
             contentTable += `<tr>
                                 <td><input class="checkboxes" type="checkbox" name="check" value="${item.id}"></td>
                                 <td>${item.id}</td>
@@ -54,8 +52,8 @@ let createTable = function(data = this.data){
         }
     });
     tbody.innerHTML = contentTable;
-    createPagination();
-    //return visibleData;
+    createPagination(data);
+    return data;
 }
 
 // select/unselect all checkboxes
@@ -87,8 +85,6 @@ let alphabetOrderSort = function(alphabetOrder){
         }
         
     });
-    console.log(data);
-    console.log(byName);
     createTable(byName);
 }
 
@@ -100,7 +96,6 @@ checkall.addEventListener('click', function(){
 
 filter.addEventListener('change', function(){
     let checked = this.value;
-    ///console.log(checked);
     if(checked == 'a'){
         alphabetOrderSort(true);
     }
