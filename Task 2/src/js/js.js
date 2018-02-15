@@ -2,7 +2,11 @@
 
 let dataKey = 'data',
     data = '',
-    alphabetOrder = true;
+    alphabetOrder = true,
+    startIndex = 0,
+    finishIndex = 10;
+    
+
 
 // get data from server, create table and pagination, and put data to localStorage
 let getDataFromServer = function(){
@@ -36,12 +40,27 @@ let createPagination = function(data){
     paginationList.innerHTML = pagination; 
 }
 
+// menu pagination click event
+let pageEvent = function(){
+    Array.prototype.forEach.call(document.querySelectorAll('.page-link'), function(a){
+        a.addEventListener('click', function(e){
+            e.preventDefault();
+            finishIndex = 10 * this.dataset.num;
+            startIndex = 10 * (this.dataset.num - 1);
+            createTable(data);
+        console.log(this.dataset.num);
+        })
+      })
+}
+
 // create table and pagination
 let createTable = function(data){
     let tbody = document.getElementById('tbody');
     let contentTable = '';
+    // console.log(startIndex);
+    // console.log(finishIndex);
     data.forEach(function(item, i, data){
-        if(i < 10){
+        if( i >= startIndex && i < finishIndex){
             contentTable += `<tr>
                                 <td><input class="checkboxes" type="checkbox" name="check" value="${item.id}"></td>
                                 <td>${item.id}</td>
@@ -53,6 +72,7 @@ let createTable = function(data){
     });
     tbody.innerHTML = contentTable;
     createPagination(data);
+    pageEvent();
     return data;
 }
 
@@ -72,7 +92,6 @@ let checkAllBoxes = function(){
 }
 
 let alphabetOrderSort = function(alphabetOrder){
-
     var byName = data.slice(0);
     byName.sort(function(a,b) {
         var x = a.title.toLowerCase();
@@ -83,31 +102,36 @@ let alphabetOrderSort = function(alphabetOrder){
         else{
             return x > y ? -1 : x < y ? 1 : 0;
         }
-        
     });
     createTable(byName);
 }
 
-
-
 checkall.addEventListener('click', function(){
     checkAllBoxes();
-})
+});
 
 filter.addEventListener('change', function(){
     let checked = this.value;
     if(checked == 'a'){
+        startIndex = 0;
+        finishIndex = 10;
         alphabetOrderSort(true);
     }
     else if(checked == 'z'){
+        startIndex = 0;
+        finishIndex = 10;
         alphabetOrderSort(false);
     }
     else{
         createTable(data);
     }
-
 })
 
+more.addEventListener('click', function(e){
+    e.preventDefault();
+    finishIndex += 10;
+    createTable(data);
+})
 
 isDataLocal();
 
