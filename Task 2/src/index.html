@@ -12,13 +12,21 @@
 
 <div class="container">
     <h1>Комментарии</h1>
-    <div class="form-group col-md-3">
-        <select class="form-control form-control-lg" name="filter" id="filter">
-            <option value="0" selected>Сортировка</option>
-            <option value="a">A->Z</option>
-            <option value="z">Z->A</option>
-        </select>
-    </div>
+    <div class="row justify-content-between">
+        <div class="form-group col-md-3">
+            <select class="form-control form-control-lg" name="filter" id="filter">
+                <option value="0" selected>Сортировка</option>
+                <option value="a">A->Z</option>
+                <option value="z">Z->A</option>
+            </select>
+        </div>
+        <div class="form-group col-md-4">
+            <form id="search" class="form-inline my-2 my-lg-0">
+                <input id="searchInput" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            </form>
+        </div>
+      </div>
     <table class="table table-striped">
         <thead>
           <tr>
