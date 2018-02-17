@@ -7,9 +7,10 @@ let dataKey = 'data',
     finishIndex = 10,
     startIndexPagination = 0,
     finishIndexPagination = 1,
-    sortArray = '',
+    sortArray = [],
     sortArrayFlag = false,
-    searchArray = [];
+    searchArray = [],
+    searchArrayFlag = false;
     
     
 // checks the availability of data
@@ -18,7 +19,7 @@ let isDataLocal = () =>{
 }
 
 // get data from server, create table and pagination, and put data to localStorage
-let getDataFromServer = function(){
+let getDataFromServer = () => {
     fetch('https://jsonplaceholder.typicode.com/posts')
         .then(response => response.json())
         .then(json => {
@@ -29,11 +30,13 @@ let getDataFromServer = function(){
 }
 
 // create table and pagination
-let createTable = function(data){
+let createTable = (data) => {
     let tbody = document.getElementById('tbody');
     let contentTable = '';
-    //let dataArray = (sortArrayFlag == false) ? data.slice() : sortArray.slice();
-    let dataArray = (sortArrayFlag == false) ? data.slice() : sortArray.slice();
+    let dataArray = searchArrayFlag == true && sortArrayFlag == true  || searchArrayFlag == false && sortArrayFlag ==true ?
+                            sortArray.slice() : 
+                            searchArrayFlag == true && sortArrayFlag == false ? 
+                            searchArray.slice() : data.slice();
     dataArray.forEach(function(item, i, data){
         if( i >= startIndex && i < finishIndex){
             contentTable += `<tr>
@@ -48,44 +51,79 @@ let createTable = function(data){
     tbody.innerHTML = contentTable;
     createPagination(dataArray);
     pageEvent();
+    pagePrevEvent();
+    pageNextEvent();
     return data;
 }
 
 
 // create pagination
-let createPagination = function(data){
-    console.log(startIndexPagination);
-    console.log(finishIndexPagination);
-    let len = data.length / 10;
+let createPagination = (data) => {
+    let len = parseInt(data.length / 10);
     let activeItem;
-    let pagination = `<li class="page-item"><a class="page-link" href="#">Previous</a></li>`;
+    let prevDisabled = startIndexPagination == 0 || len == 0 ? 'disabled' : '';
+    let nextDisabled = finishIndexPagination == len || len == 0 ? 'disabled' : '';
+    let pagination = `<li class="page-item ${prevDisabled}"><a id="prevButton" class="page-link" href="#">Previous</a></li>`;
     for(let i = 0; i < len; i++){
         activeItem = (i >= startIndexPagination && i < finishIndexPagination) ? ' active' : '';
         pagination += `<li class="page-item ${activeItem}">
                             <a class="page-link page-link-num" data-num="${i + 1}" href="#">${i + 1}</a>
-                        </li>`
+                        </li>`;
     }
-    pagination += ` <li class="page-item"><a class="page-link" href="#">Next</a></li>`;
+    pagination += ` <li class="page-item ${nextDisabled}"><a id="nextButton" class="page-link" href="#">Next</a></li>`;
     paginationList.innerHTML = pagination; 
+    if(finishIndexPagination == len || len == 0){
+        more.classList.add('d-none');
+    }
+    else{
+        more.classList.remove('d-none');
+    }
 }
 
-// menu pagination click event
-let pageEvent = function(){
-    Array.prototype.forEach.call(document.querySelectorAll('.page-link-num'), function(a){
-        a.addEventListener('click', function(e){
+// menu pagination click event 
+let pageEvent = () => {
+    paginationList.addEventListener('click', function(e){
+        if(e.target && e.target.classList.contains('page-link-num')){
             e.preventDefault();
-            startIndexPagination = + this.dataset.num - 1;
-            finishIndexPagination = + this.dataset.num;
-            finishIndex = 10 * this.dataset.num;
-            startIndex = 10 * (this.dataset.num - 1);
+            checkall.checked = false;
+            startIndexPagination = + e.target.dataset.num - 1;
+            finishIndexPagination = + e.target.dataset.num;
+            finishIndex = 10 * e.target.dataset.num;
+            startIndex = 10 * (e.target.dataset.num - 1);
             createTable(data);
-        })
-      })
+        }
+    });
+}
+// menu pagination click event 
+let pagePrevEvent = () => {
+    prevButton.addEventListener('click', function(e){
+        e.preventDefault();
+        checkall.checked = false;
+        finishIndexPagination -= 1;
+        startIndexPagination = finishIndexPagination - 1;
+        finishIndex = 10 * finishIndexPagination;
+        startIndex = 10 * startIndexPagination;
+        createTable(data);
+    })
+}
+
+// menu pagination click event 
+let pageNextEvent = () => {
+    nextButton.addEventListener('click', function(e){
+        e.preventDefault();
+        checkall.checked = false;
+        startIndexPagination = finishIndexPagination;
+        finishIndexPagination += 1;
+        finishIndex = 10 * finishIndexPagination;
+        startIndex = 10 * startIndexPagination;
+        createTable(data);
+    
+    })
 }
 
 
 // select/unselect all checkboxes
-let checkAllBoxes = function(){
+let checkAllBoxes = () => {
     checkBoxes = document.querySelectorAll('.checkboxes');
     if (checkall.checked) {
         checkBoxes.forEach(function(item, i, checkBoxes){
@@ -99,11 +137,12 @@ let checkAllBoxes = function(){
     }
 }
 
-let alphabetOrderSort = function(alphabetOrder){
-    sortArray = data.slice(0);
+// sort the array in alphabetical order and in reverse alphabetical order
+let alphabetOrderSort = (alphabetOrder) => {
+    sortArray = (searchArrayFlag == false) ? data.slice(0) : searchArray.slice(0);
     sortArray.sort(function(a,b) {
-        var x = a.title.toLowerCase();
-        var y = b.title.toLowerCase();
+        var x = a.title.replace(/<[^>]+>/g,'').toLowerCase();
+        var y = b.title.replace(/<[^>]+>/g,'').toLowerCase();
         if(alphabetOrder){
             return x < y ? -1 : x > y ? 1 : 0;
         }
@@ -114,19 +153,35 @@ let alphabetOrderSort = function(alphabetOrder){
     createTable(sortArray);
 }
 
-let searchFunction = function(searchValue){
+// search
+let searchFunction = (searchValue) => {
+    let successSearchFlag = false;
     searchArray = [];
     let len = data.length;
-    let expr = new RegExp("(" + searchValue + ")", "i");
+    let expr = new RegExp("(" + searchValue + ")", "gi");
+    let tempSearchArray = JSON.parse(JSON.stringify(data));
     for(let i = 0; i < len; i++){
-        for(let key in data[i]){
-            if(data[i][key].toString().search(expr) != -1){
-                searchArray.push(data[i]);
-                break;
+        for(let key in tempSearchArray[i]){
+            if(tempSearchArray[i][key].toString().search(expr) != -1){
+                successSearchFlag = true;
+                tempSearchArray[i][key] = tempSearchArray[i][key].replace(new RegExp("(" + searchValue + ")", "gi"), '<span class="bg-success">' + searchValue + '</span>')
             }
         }
+        if(successSearchFlag == true){
+            searchArray.push(tempSearchArray[i]);
+        }
+        successSearchFlag = false;
     }
     createTable(searchArray);
+}
+
+// reset settings 
+let resetSettings = () =>{
+    startIndex = 0;
+    finishIndex = 10;
+    startIndexPagination = 0;
+    finishIndexPagination = 1;
+    checkall.checked = false;
 }
 
 checkall.addEventListener('click', function(){
@@ -135,10 +190,7 @@ checkall.addEventListener('click', function(){
 
 filter.addEventListener('change', function(){
     let checked = this.value;
-    startIndex = 0;
-    finishIndex = 10;
-    startIndexPagination = 0;
-    finishIndexPagination = 1;
+    resetSettings();
     if(checked == 'a'){
         sortArrayFlag = true;
         alphabetOrderSort(true);
@@ -155,23 +207,33 @@ filter.addEventListener('change', function(){
 
 more.addEventListener('click', function(e){
     e.preventDefault();
+    checkall.checked = false;
     finishIndex += 10;
     finishIndexPagination += 1;
-    // console.log(startIndexPagination);
-    // console.log(finishIndexPagination);
     createTable(data);
 })
 
 search.addEventListener('submit', function(e){
     e.preventDefault();
-    let searchValue = searchInput.value;
-    startIndex = 0;
-    finishIndex = 10;
-    startIndexPagination = 0;
-    finishIndexPagination = 1;
-    searchFunction(searchValue);
-    searchInput.value = '';
+    filter.value = 0;
+    sortArrayFlag = false;
+    let searchValue = searchInput.value.trim();
+    if(searchValue != ''){
+        searchArrayFlag = true;
+        resetSettings();
+        searchFunction(searchValue);
+        searchInput.value = '';
+    }
 })
+
+clearButton.addEventListener('click', function(){
+    filter.value = 0;
+    searchArrayFlag = false;
+    sortArrayFlag = false;
+    searchInput.value = '';
+    resetSettings();
+    createTable(data);
+});
 
 isDataLocal();
 
