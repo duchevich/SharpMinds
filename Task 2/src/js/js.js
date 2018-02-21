@@ -10,7 +10,8 @@ let dataKey = 'data',
     sortArray = [],
     sortArrayFlag = false,
     searchArray = [],
-    searchArrayFlag = false;
+    searchArrayFlag = false,
+    contentTable = '';
     
     
 // checks the availability of data
@@ -32,7 +33,7 @@ let getDataFromServer = () => {
 // create table and pagination
 let createTable = (data) => {
     let tbody = document.getElementById('tbody');
-    let contentTable = '';
+    //let contentTable = '';
     let dataArray = searchArrayFlag == true && sortArrayFlag == true  || searchArrayFlag == false && sortArrayFlag ==true ?
                             sortArray.slice() : 
                             searchArrayFlag == true && sortArrayFlag == false ? 
