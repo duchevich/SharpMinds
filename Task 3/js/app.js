@@ -1,88 +1,119 @@
-class Timer{
+class Clock{
     constructor(){
-        this.currentTime;
-        this.ld;
+        this.currentTime,
+        this.week,
+        this.day,
+        this.mounth,
+        this.hours,
+        this.mins,
+        this.seconds,
+        this.ld,
+        this.ldword;
+        this.weekSpan = document.getElementById('weekSpan');
+        this.daySpan = document.getElementById('daySpan');
+        this.mounthSpan = document.getElementById('mounthSpan');
+        this.hoursDiv = document.getElementById('hoursDiv');
+        this.minsDiv = document.getElementById('minsDiv');
+        this.secsDiv = document.getElementById('secsDiv');
+        this.leftDaysSpan = document.getElementById('leftDaysSpan');
+        this.leftDaysWordSpan = document.getElementById('leftDaysWordSpan');
     }
 
-    current() {
+    correctTimerVars(num) {
+        return num = num < 10 ? '0' + num : num;
+    }
+
+    setSeconds(){
         this.currentTime = new Date();
+        this.seconds = this.correctTimerVars(this.currentTime.getSeconds());
     }
 
-    weekTime() {
+    getSeconds(){
+        this.secsDiv.innerText = this.seconds;
+    }
+
+    setMinutes(){
+        this.mins = this.correctTimerVars(this.currentTime.getMinutes());
+    }
+
+    getMinutes(){
+        this.minsDiv.innerText = this.mins;
+    }
+
+    setHours(){
+        this.hours = this.correctTimerVars(this.currentTime.getHours());
+    }
+
+    getHours(){
+        this.hoursDiv.innerText = this.hours;
+    }
+
+    setDayInfo() {
         this.week = this.currentTime.getDay();
-        weekSpan.innerText = weekArr[this.week];
-    }
-
-    dayTime() {
         this.day = this.currentTime.getDate();
-        daySpan.innerText = this.day;
-    }
-
-    mounthTime() {
         this.mounth = this.currentTime.getMonth();
-        mounthSpan.innerText = mounthArr[this.mounth];
-    }
-
-    hoursTime() {
-        this.hours = this.currentTime.getHours(); 
-        this.hours = this.hours < 10 ? '0' + this.hours : this.hours;
-        hoursDiv.innerText = this.hours;
-    }
-
-    minsTime() {
-        this.mins = this.currentTime.getMinutes(); 
-        this.mins = this.mins < 10 ? '0' + this.mins : this.mins;
-        minsDiv.innerText = this.mins;
-    }
-
-    secondsTime() {
-        this.seconds = this.currentTime.getSeconds(); 
-        this.seconds = this.seconds < 10 ? '0' + this.seconds : this.seconds;
-        secsDiv.innerText = this.seconds;
-    }
-
-    daysLeft() {
-        this.startDate = new Date();
-        this.finishDate = new Date(2019, 0, 1);
-        this.today = this.startDate.getTime();
-        this.finish = this.finishDate.getTime();
-        this.ld = parseInt((this.finish - this.today)/86400000); // 1000 * 60 * 60 * 24
-        leftDaysSpan.innerText = this.ld;
-    }
-
-    words() {
-        this.ld > 100 ? this.ld %= 100 : this.ld;
-		this.rem = this.ld %10;
-		if( this.ld > 4 && this.ld < 21){
-			leftDaysWordSpan.innerText = daysArr[2];
+        this.ld = parseInt((new Date(2019, 0, 1).getTime() - new Date().getTime())/86400000); // 1000 * 60 * 60 * 24
+        this.ldTmp = this.ld > 100 ? this.ld % 100 : this.ld;
+		this.rem = this.ld % 10;
+		if( this.ldTmp > 4 && this.ldTmp < 21){
+			this.ldword = daysArr[2];
 		}
 		else if(this.rem === 1){
-			leftDaysWordSpan.innerText = daysArr[0];
+			this.ldword = daysArr[0];
 		}
 		else if(this.rem > 1 && this.rem < 5){
-			leftDaysWordSpan.innerText = daysArr[1];
+			this.ldword = daysArr[1];
 		}
 		else{
-			leftDaysWordSpan.innerText = daysArr[0];
+			this.ldword = daysArr[0];
 		}
-	}
-
-    nowtime() {
-        this.current();
-        this.weekTime();
-        this.dayTime();
-        this.mounthTime();
-        this.hoursTime();
-        this.minsTime();
-        this.secondsTime();  
-        this.daysLeft();  
-        this.words();   
     }
-    
+
+    getDayInfo(){
+        this.weekSpan.innerText = weekArr[this.week];
+        this.daySpan.innerText = this.day;
+        this.mounthSpan.innerText = mounthArr[this.mounth];
+        this.leftDaysSpan.innerText = this.ld;
+        this.leftDaysWordSpan.innerText = this.ldword;
+    }
+
+    setClock(){
+        this.setSeconds();
+        this.setMinutes();
+        this.setHours();
+        this.setDayInfo();
+    }
+
+    getClock(){
+        this.getSeconds();
+        this.getMinutes();
+        this.getHours();
+        this.getDayInfo();
+    }
+
+    goClock(){
+        this.setSeconds();
+        this.getSeconds();
+        if(this.seconds == 0){
+            this.setMinutes();
+            this.getMinutes();
+        }
+        if(this.seconds == 0 && this.mins == 0){
+            this.setHours();
+            this.getHours();
+        }
+        if(this.seconds == 0 && this.mins == 0  && this.hours == 0){
+            this.setDayInfo();
+            this.getDayInfo();
+        }
+        
+    }
     init(){
-        setInterval(() =>this.nowtime(), 1000);
+        this.setClock();
+        this.getClock();
+        setInterval(() =>this.goClock(), 1000);
     }
 }
 
-let timer = new Timer();
-timer.init();
+let clock = new Clock();
+clock.init();
