@@ -1,0 +1,132 @@
+@font-face {
+	font-family: 'icomoon';
+	src:  url('../fonts/icomoon.eot?pah6bk');
+	src:  url('../fonts/icomoon.eot?pah6bk#iefix') format('embedded-opentype'),
+	  url('../fonts/icomoon.ttf?pah6bk') format('truetype'),
+	  url('../fonts/icomoon.woff?pah6bk') format('woff'),
+	  url('../fonts/icomoon.svg?pah6bk#icomoon') format('svg');
+	font-weight: normal;
+	font-style: normal;
+  }
+  
+  [class^="icon-"], [class*=" icon-"] {
+	/* use !important to prevent issues with browser extensions that change fonts */
+	font-family: 'icomoon' !important;
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+	
+	/* Enable Ligatures ================ */
+	letter-spacing: 0;
+	-webkit-font-feature-settings: "liga";
+	-moz-font-feature-settings: "liga=1";
+	-moz-font-feature-settings: "liga";
+	-ms-font-feature-settings: "liga" 1;
+	font-feature-settings: "liga";
+	-webkit-font-variant-ligatures: discretionary-ligatures;
+	font-variant-ligatures: discretionary-ligatures;
+  
+	/* Better Font Rendering =========== */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+  }
+  
+  .icon-pencil:before {
+	content: "\e905";
+  }
+  .icon-clock:before {
+	content: "\e94e";
+  }
+  .icon-alarm:before {
+	content: "\e950";
+  }
+  .icon-stopwatch:before {
+	content: "\e952";
+  }
+  .icon-calendar:before {
+	content: "\e953";
+  }
+  .icon-plus:before {
+	content: "\ea0a";
+  }
+  .icon-cross:before {
+	content: "\ea0f";
+	}
+	.icon-cross,
+	.icon-pencil,
+.icon-clock,
+.icon-alarm,
+.icon-stopwatch{
+	font-size: 25px;
+	cursor: pointer;
+}
+
+
+:root {
+  --jumbotron-padding-y: 3rem;
+}
+
+.jumbotron {
+  padding-top: var(--jumbotron-padding-y);
+  padding-bottom: var(--jumbotron-padding-y);
+  margin-bottom: 0;
+  background-color: #fff;
+}
+
+/* @media (min-width: 768px) {
+  .jumbotron {
+    padding-top: calc(var(--jumbotron-padding-y) * 2);
+    padding-bottom: calc(var(--jumbotron-padding-y) * 2);
+  }
+} */
+
+.jumbotron p:last-child {
+  margin-bottom: 0;
+}
+
+.jumbotron-heading {
+  font-weight: 300;
+}
+
+.jumbotron .container {
+  max-width: 40rem;
+}
+
+footer {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+footer p {
+  margin-bottom: .25rem;
+}
+
+.box-shadow { box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05); }
+
+
+.hide {
+  display: none;
+}
+
+.show {
+  display: block;
+}
+.btn-primary.focus, .btn-primary:focus {
+  box-shadow: none;
+}
+
+#details-items{
+	width: 60%;
+	margin: 0 auto;
+}
+
+#details-items input{
+	width: 100%;
+	margin-bottom: 15px;
+}
+h4{
+	text-align: center;
+}
