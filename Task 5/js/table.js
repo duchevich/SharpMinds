@@ -4,7 +4,7 @@ class Table{
 		this.users = [];
 		this.editUserFlag = false;
 		this.checkAllFlag = false;
-		this.checklFlag = false;
+		this.checkFlag = false;
 		this.tableTitle = document.getElementById('table-title');
 		this.userList = document.getElementById('user-list');
 		this.inputId = document.getElementById('inputId');
@@ -18,6 +18,8 @@ class Table{
 		this.mainView = document.getElementById('main-view');
 		this.backButton = document.getElementById('back-btn');
 		this.deleteButton = document.getElementById('deleteButton');
+        this.checkall = document.getElementById('select-all');
+        this.inputSubmit = document.getElementById('submit-input');
 	}
 
     init(){
@@ -28,13 +30,16 @@ class Table{
         else{
             this.renderTable();
             this.usersHendler();
+            this.userFormHendler();
         }
     }
 
+    // сохранение данных в localStorage
     setData(){
         localStorage.setItem('data', JSON.stringify(this.users));
     }
 
+    // загрузка данных с сервера, вывод данных, инициализация обработчиков
     downloadData(){
         fetch('https://gist.githubusercontent.com/duchevich/cd0f4e99029751663cc8d34cdd74ace9/raw/2f2a0452c9994f3a64c81e0202cd1b22d9a7a094/data.json')
                 .then(response => response.json())
@@ -42,17 +47,19 @@ class Table{
                     this.users = json;
                     this.renderTable();
                     this.usersHendler();
+                    this.userFormHendler();
                     localStorage.setItem('data', JSON.stringify(json))}
                 );
     }
 
+    // переключение видимости таблицы / формы
     toggleTable(){
         this.tableTitle.classList.toggle('hide');
         this.mainView.classList.toggle('hide');
         this.detailsView.classList.toggle('hide');
     }
 
-
+    // отрисовка таблицы пользователей
     renderTable(){
         let tableStr = '';
         this.users.forEach((item, i) =>{
@@ -77,8 +84,9 @@ class Table{
         this.userList.innerHTML = tableStr;
     }   
 
+    // обработчик событий экрана таблицы пользователей
     usersHendler(){
-        this.userList.addEventListener('click', (e) => {
+        this.mainView.addEventListener('click', (e) => {
             if (e.target.classList.contains('editRow')){
                 let id = e.target.closest('tr').dataset.id;
                 this.editUser(id);
@@ -88,9 +96,44 @@ class Table{
                 this.removeUser(id);
             }
             if (e.target.classList.contains('checkboxes')){
-                
+                this.testCheckboxes();
+                this.toggleDeleteButton();
+            }
+             if (e.target.classList.contains('select-all')){
+             	 this.checkAllBoxes();
+                this.testCheckboxes();
+                this.toggleDeleteButton();
+            }
+            if (e.target.id == 'addButton'){
+             	 this.toggleTable();
+            }
+            if (e.target.id == 'deleteButton'){
+                if(this.checkAllFlag == true){
+                    this.removeAllUsers();
+                    this.checkall.checked = false;
+                    this.checkAllFlag = false;
+                }
+                if(this.checkFlag == true){
+                    this.removeUsersArray();
+                    this.checkFlag = false;
+                    this.toggleDeleteButton();
+                }
             }
         });
+    }
+
+    // обработчик событий экрана формы ввода данных пользователя
+    userFormHendler(){
+        this.inputSubmit.addEventListener('click', (e) => {
+            e.preventDefault();
+            this.saveUser();
+            this.toggleTable();
+        })
+        this.backButton.addEventListener('click', (e) => {
+            this.toggleTable();
+            document.getElementById('userForm').reset();
+            this.editUserFlag = false;
+        })
     }
 
     // удаление данных пользователя
@@ -104,8 +147,27 @@ class Table{
         this.renderTable();
         this.setData();
     }
+    
+     // удаление данных о всех пользователях
+    removeAllUsers(){
+        this.users = [];
+        this.renderTable();
+        this.setData();
+    }
+    
+     // удаление данных нескольких пользователей
+    removeUsersArray(){
+        let checkBoxes = document.querySelectorAll('.checkboxes');
+        checkBoxes.forEach((item, i, checkBoxes) => {
+            if (item.checked == true){
+                this.removeUser(item.value)
+            }
+        });	
+        this.renderTable();
+        this.setData();
+    }
 
-    // редактирование данных пользователя
+    // заполнение формы для редактирование данных пользователя
     editUser(id){
         this.toggleTable();
         this.users.forEach((item, i) => {
@@ -128,12 +190,12 @@ class Table{
         if(this.editUserFlag == true){
              this.users.forEach((item, i) => {
                 if(item.id == this.inputId.value){
-                    item.name = this.inputName.value;
-                    item.login = this.inputLogin.value;
-                    item.email = this.inputEmail.value;
+                    item.name = this.inputName.value.trim();
+                    item.login = this.inputLogin.value.trim();
+                    item.email = this.inputEmail.value.trim();
                     item.gender = this.inputGender.value;
-                    item.country = this.inputCountry.value;
-                    item.avatar = this.inputAvatar.value;
+                    item.country = this.inputCountry.value.trim();
+                    item.avatar = this.inputAvatar.value.trim();
                     return;
                 }
             });
@@ -144,12 +206,12 @@ class Table{
         else{
             this.users.push({
                 'id' : Date.now(),
-                'name' : this.inputName.value,
-                'login' : this.inputLogin.value,
-                'email' : this.inputEmail.value,
+                'name' : this.inputName.value.trim(),
+                'login' : this.inputLogin.value.trim(),
+                'email' : this.inputEmail.value.trim(),
                 'gender' : this.inputGender.value,
-                'country' : this.inputCountry.value,
-                'avatar' : this.inputAvatar.value
+                'country' : this.inputCountry.value.trim(),
+                'avatar' : this.inputAvatar.value.trim()
             });
             this.renderTable();
             this.setData();
@@ -157,43 +219,37 @@ class Table{
         document.getElementById('userForm').reset();
     }
 
-    // select/unselect all checkboxes
+    // выделение всех чекбоксов
     checkAllBoxes(){
         let checkBoxes = document.querySelectorAll('.checkboxes');
-        if (checkall.checked) {
-            checkBoxes.forEach(function(item, i, checkBoxes){
+        if (this.checkall.checked) {
+            checkBoxes.forEach((item, i, checkBoxes) => {
                 item.checked = true;
             });
             this.checkAllFlag = true;
         }
         else {
-            checkBoxes.forEach(function(item, i, checkBoxes){
+            checkBoxes.forEach((item, i, checkBoxes) => {
                 item.checked = false;
             });
             this.checkAllFlag = false;
         }
     }
 
+    // проверка массива чекбоксов на наличие выбраных чекбоксов для дальнейшего переключения состояния кнопки "Удалить"
     testCheckboxes(){
         let checkBoxes = document.querySelectorAll('.checkboxes');
-        checkBoxes.forEach(function(item, i, checkBoxes){
+        this.checkFlag = false;
+        checkBoxes.forEach((item, i, checkBoxes) => {
             if (item.checked == true){
                 this.checkFlag = true;
             }
         });
     }
 
-
+    // переключение состояния кнопки "Удалить"
     toggleDeleteButton(){
-        if(this.checkFlag == true || this.checkAllFlag == true){
-            this.deleteButton.classList.remove('disabled');
-        }
-        else{
-            this.deleteButton.classList.add('disabled');
-        }
+        this.checkFlag == true || this.checkAllFlag == true ? this.deleteButton.disabled = false : this.deleteButton.disabled = true;
     }
-
-
-
 }
 
